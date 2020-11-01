@@ -1,0 +1,18 @@
+[
+  {
+    "id": 0,
+    "value": "Created"
+  },
+  {
+    "id": 1,
+    "value": "Started"
+  },
+  {
+    "id": 2,
+    "value": "Finished"
+  },
+  {
+    "id": 3,
+    "value": "Canceled"
+  }
+]
