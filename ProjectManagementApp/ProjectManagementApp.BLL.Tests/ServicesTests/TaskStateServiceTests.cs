@@ -36,10 +36,10 @@ namespace ProjectManagementApp.BLL.Tests.ServicesTests
             };
 
             // Act
-            _taskStateService.Create(newTaskState);
+            _taskStateService.CreateAsync(newTaskState);
 
             // Assert
-            A.CallTo(() => _unitOfWork.TaskStates.Create(A<TaskState>.That.Matches(a => a.Id == newTaskState.Id))).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.TaskStates.CreateAsync(A<TaskState>.That.Matches(a => a.Id == newTaskState.Id))).MustHaveHappened();
 
         }
     }   

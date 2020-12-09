@@ -2,9 +2,8 @@
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.ProjectManagementApp.Repositories
 {
@@ -16,14 +15,14 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             _context = context;
         }
 
-        public void Create(User item)
+        public async System.Threading.Tasks.Task CreateAsync(User item)
         {
-            _context.Users.Add(item);
+            await _context.Users.AddAsync(item);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = _context.Users.FirstOrDefault(a => a.Id == id);
+            var item = await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
             if(item == null)
             {
                 return false;
@@ -32,20 +31,19 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             return true;
         }
 
-        public User Get(int id)
+        public async Task<User> GetAsync(int id)
         {
-            return _context.Users.FirstOrDefault(a => a.Id == id);
+            return await _context.Users.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return _context.Users;
+            return await _context.Users.ToListAsync();
         }
 
-        public bool Update(User item)
+        public async Task<bool> UpdateAsync(User item)
         {
-            var exists = _context.Users.Contains(item);
-
+            var exists = await _context.Users.ContainsAsync(item);
             if(!exists)
             {
                 return false;

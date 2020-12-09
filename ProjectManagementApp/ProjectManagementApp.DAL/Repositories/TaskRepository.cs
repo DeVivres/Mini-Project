@@ -1,14 +1,12 @@
 ﻿using ProjectManagementApp.ProjectManagementApp.Context;
-using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.ProjectManagementApp.Repositories
 {
-    public class TaskRepository : IRepository<Task>
+    public class TaskRepository : IRepository<Entities.Task>
     {
         private readonly DatabaseContext _context;
         public TaskRepository(DatabaseContext context)
@@ -16,14 +14,14 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             _context = context;
         }
 
-        public void Create(Task item)
+        public async System.Threading.Tasks.Task CreateAsync(Entities.Task item)
         {
-            _context.Tasks.Add(item);
+            await _context.Tasks.AddAsync(item);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = _context.Tasks.FirstOrDefault(a => a.Id == id);
+            var item = await _context.Tasks.FirstOrDefaultAsync(a => a.Id == id);
             if (item == null)
             {
                 return false;
@@ -32,19 +30,19 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             return true;
         }
 
-        public Task Get(int id)
+        public async Task<Entities.Task> GetAsync(int id)
         {
-            return _context.Tasks.FirstOrDefault(a => a.Id == id);
+            return await _context.Tasks.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public IEnumerable<Task> GetAll()
+        public async Task<IEnumerable<Entities.Task>> GetAllAsync()
         {
-            return _context.Tasks;
+            return await _context.Tasks.ToListAsync();
         }
 
-        public bool Update(Task item)
+        public async Task<bool> UpdateAsync(Entities.Task item)
         {
-            var exists = _context.Tasks.Contains(item);
+            var exists = await _context.Tasks.ContainsAsync(item);
             if(!exists)
             {
                 return false;

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.WebAPI.Controllers
 {
@@ -15,16 +16,16 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var users = _userService.GetAll();
+            var users = await _userService.GetAllAsync();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
-            var user = _userService.Get(id);
+            var user = await _userService.GetAsync(id);
             if (user == null)
             {
                 return NotFound(user);
@@ -33,16 +34,20 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] UserDTO user)
+        public async Task<IActionResult> CreateAsync([FromBody] UserDTO user)
         {
-            _userService.Create(user);
+            var created = await _userService.CreateAsync(user);
+            if (!created)
+            {
+                return BadRequest(user);
+            }
             return Created($"The User was created", user);
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] UserDTO user)
+        public async Task<IActionResult> UpdateAsync([FromBody] UserDTO user)
         {
-            var updated = _userService.Update(user);
+            var updated = await _userService.UpdateAsync(user);
             if (!updated)
             {
                 return NotFound(user);
@@ -51,9 +56,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deleted = _userService.Delete(id);
+            var deleted = await _userService.DeleteAsync(id);
             if (!deleted)
             {
                 return NotFound();

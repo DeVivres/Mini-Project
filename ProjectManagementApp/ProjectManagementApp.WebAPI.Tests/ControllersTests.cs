@@ -3,11 +3,9 @@ using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace ProjectManagementApp.WebAPI.Tests.Tests
@@ -69,7 +67,6 @@ namespace ProjectManagementApp.WebAPI.Tests.Tests
                 RegisteredAt = new DateTime(2010, 4, 10),
                 TeamId = 1,
                 Birthday = new DateTime(1997, 4, 19),
-                Id = 1,
             };
 
             var json = JsonConvert.SerializeObject(user);
@@ -98,7 +95,6 @@ namespace ProjectManagementApp.WebAPI.Tests.Tests
         {
             var team = new Team()
             {
-                Id = 1,
                 Name = "Fellons",   
             };
 

@@ -3,6 +3,7 @@ using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.BLL.Services
 {
@@ -17,31 +18,37 @@ namespace ProjectManagementApp.BLL.Services
             _mapper = mapper;
         }
 
-        public void Create(TeamDTO item)
+        public async Task<bool> CreateAsync(TeamDTO item)
         {
-            _unitOfWork.Teams.Create(_mapper.Map<Team>(item));
+            await _unitOfWork.Teams.CreateAsync(_mapper.Map<Team>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return _unitOfWork.Teams.Delete(id);
+            var result = await _unitOfWork.Teams.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
+            return result;
         }
 
-        public TeamDTO Get(int id)
+        public async Task<TeamDTO> GetAsync(int id)
         {
-            var team = _unitOfWork.Teams.Get(id);
+            var team = await _unitOfWork.Teams.GetAsync(id);
             return _mapper.Map<TeamDTO>(team);
         }
 
-        public IEnumerable<TeamDTO> GetAll()
+        public async Task<IEnumerable<TeamDTO>> GetAllAsync()
         {
-            var teams = _unitOfWork.Teams.GetAll();
+            var teams = await _unitOfWork.Teams.GetAllAsync();
             return _mapper.Map<IEnumerable<TeamDTO>>(teams);
         }
 
-        public bool Update(TeamDTO item)
+        public async Task<bool> UpdateAsync(TeamDTO item)
         {
-            return _unitOfWork.Teams.Update(_mapper.Map<Team>(item));
+            await _unitOfWork.Teams.UpdateAsync(_mapper.Map<Team>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.WebAPI.Controllers
 {
@@ -15,16 +16,16 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var projects = _projectService.GetAll();
+            var projects = await _projectService.GetAllAsync();
             return Ok(projects);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var project = _projectService.Get(id);
+            var project = await _projectService.GetAsync(id);
             if (project == null)
             {
                 return NotFound(project);
@@ -33,16 +34,20 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] ProjectDTO project)
+        public async Task<IActionResult> CreateAsync([FromBody] ProjectDTO project)
         {
-            _projectService.Create(project);
+            var created = await _projectService.CreateAsync(project);
+            if (!created)
+            {
+                return BadRequest(project);
+            }
             return Created($"The Project was created", project);
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] ProjectDTO project)
+        public async Task<IActionResult> UpdateAsync([FromBody] ProjectDTO project)
         {
-            var updated = _projectService.Update(project);
+            var updated = await _projectService.UpdateAsync(project);
             if (!updated)
             {
                 return NotFound(project);
@@ -51,9 +56,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deleted = _projectService.Delete(id);
+            var deleted = await _projectService.DeleteAsync(id);
             if (!deleted)
             {
                 return NotFound();

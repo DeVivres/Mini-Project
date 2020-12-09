@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.WebAPI.Controllers
 {
@@ -15,16 +16,16 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var teams = _teamService.GetAll();
+            var teams = await _teamService.GetAllAsync();
             return Ok(teams);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var team = _teamService.Get(id);
+            var team = await _teamService.GetAsync(id);
             if (team == null)
             {
                 return NotFound(team);
@@ -33,16 +34,20 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] TeamDTO team)
+        public async Task<IActionResult> CreateAsync([FromBody] TeamDTO team)
         {
-            _teamService.Create(team);
+            var created = await _teamService.CreateAsync(team);
+            if(!created)
+            {
+                return BadRequest(team);  
+            }
             return Created($"The Team was created", team);
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] TeamDTO team)
+        public async Task<IActionResult> UpdateAsync([FromBody] TeamDTO team)
         {
-            var updated = _teamService.Update(team);
+            var updated = await _teamService.UpdateAsync(team);
             if (!updated)
             {
                 return NotFound(team);
@@ -51,9 +56,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deleted = _teamService.Delete(id);
+            var deleted = await _teamService.DeleteAsync(id);
             if (!deleted)
             {
                 return NotFound();

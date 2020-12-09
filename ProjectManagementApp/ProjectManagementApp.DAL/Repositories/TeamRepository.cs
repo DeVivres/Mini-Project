@@ -2,9 +2,8 @@
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.ProjectManagementApp.Repositories
 {
@@ -16,14 +15,14 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             _context = context;
         }
 
-        public void Create(Team item)
+        public async System.Threading.Tasks.Task CreateAsync(Team item)
         {
-            _context.Teams.Add(item);
+            await _context.Teams.AddAsync(item);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = _context.Teams.FirstOrDefault(a => a.Id == id);
+            var item = await _context.Teams.FirstOrDefaultAsync(a => a.Id == id);
             if(item == null)
             {
                 return false;
@@ -32,19 +31,19 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             return true;
         }
 
-        public Team Get(int id)
+        public async Task<Team> GetAsync(int id)
         {
-            return _context.Teams.FirstOrDefault(a => a.Id == id);
+            return await _context.Teams.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public IEnumerable<Team> GetAll()
+        public async Task<IEnumerable<Team>> GetAllAsync()
         {
-            return _context.Teams;
+            return await _context.Teams.ToListAsync();
         }
 
-        public bool Update(Team item)
+        public async Task<bool> UpdateAsync(Team item)
         {
-            var exists = _context.Teams.Contains(item);
+            var exists = await _context.Teams.ContainsAsync(item);
             if(!exists)
             {
                 return false;

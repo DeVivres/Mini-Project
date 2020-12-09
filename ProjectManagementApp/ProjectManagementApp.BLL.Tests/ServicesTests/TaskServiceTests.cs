@@ -43,22 +43,22 @@ namespace ProjectManagementApp.BLL.Tests
             };
 
             // Act
-            _taskService.Create(task);
-            _taskService.Delete(task.Id);
+            _taskService.CreateAsync(task);
+            _taskService.DeleteAsync(task.Id);
 
             // Assert
-            A.CallTo(() => _unitOfWork.Tasks.Delete(1)).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Tasks.DeleteAsync(1)).MustHaveHappened();
         }
 
         [Fact]
         public void GetTaskById_WhenWrongArguments_ThenFail()
         {
             // Arrange
-            A.CallTo(() => _unitOfWork.Tasks.Get(1))
+            A.CallTo(() => _unitOfWork.Tasks.GetAsync(1))
                 .Returns(new Task() { Id = 1, Name = "Task1", Description = "Special Task" });
 
             // Act
-            var result = _taskService.Get(2);
+            var result = _taskService.GetAsync(2);
 
             // Assert
             Assert.NotEqual(1, result.Id);
@@ -92,12 +92,12 @@ namespace ProjectManagementApp.BLL.Tests
             };
 
             // Act
-            _taskService.Create(initialTask);
-            _taskService.Update(updatedTask);
+            _taskService.CreateAsync(initialTask);
+            _taskService.UpdateAsync(updatedTask);
 
             // Assert
-            A.CallTo(() => _unitOfWork.Tasks.Create(A<Task>.That.Matches(a => a.Id == initialTask.Id))).MustHaveHappened();
-            A.CallTo(() => _unitOfWork.Tasks.Update(A<Task>.That.Matches(a => a.Id == updatedTask.Id))).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Tasks.CreateAsync(A<Task>.That.Matches(a => a.Id == initialTask.Id))).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Tasks.UpdateAsync(A<Task>.That.Matches(a => a.Id == updatedTask.Id))).MustHaveHappened();
         }
     }
 }

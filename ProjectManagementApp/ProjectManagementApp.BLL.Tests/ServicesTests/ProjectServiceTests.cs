@@ -44,21 +44,21 @@ namespace ProjectManagementApp.BLL.Tests
             };
 
             // Act
-            _projectService.Create(project);
+            _projectService.CreateAsync(project);
 
             // Assert
-            A.CallTo(() => _unitOfWork.Projects.Create(A<Project>.That.Matches(a => a.Id == project.Id))).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Projects.CreateAsync(A<Project>.That.Matches(a => a.Id == project.Id))).MustHaveHappened();
         }
 
         [Fact]
         public void GetProjectById_WhenCorrectArguments_ThenSuccess()
         {
             // Arrange
-            A.CallTo(() => _unitOfWork.Projects.Get(1))
+            A.CallTo(() => _unitOfWork.Projects.GetAsync(1))
                 .Returns(new Project() { Id = 1, Name = "Project1", AuthorId = 1 });
 
             // Act
-            var result = _projectService.Get(1);
+            var result = _projectService.GetAsync(1);
 
             // Assert
             Assert.Equal(1, result.Id);
@@ -68,7 +68,7 @@ namespace ProjectManagementApp.BLL.Tests
         public void GetAllProjects_ThenTotalCountIs5()
         {
             // Arrange
-            A.CallTo(() => _unitOfWork.Projects.GetAll()).Returns(new List<Project>()
+            A.CallTo(() => _unitOfWork.Projects.GetAllAsync()).Returns(new List<Project>()
             {
                 new Project() { Id = 1, Name = "Project1", AuthorId = 1 },
                 new Project() { Id = 2, Name = "Project2", AuthorId = 3 },
@@ -78,7 +78,7 @@ namespace ProjectManagementApp.BLL.Tests
             });
 
             // Act
-            var result = _projectService.GetAll();
+            var result = _projectService.GetAllAsync().Result;
 
             // Assert
             Assert.Equal(5, result.Count());

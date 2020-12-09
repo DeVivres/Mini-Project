@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementApp.BLL.Services;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.WebAPI.Controllers
 {
@@ -14,9 +15,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet("GetNumberOfTasksOfTheUser/{id}")]
-        public IActionResult GetNumberOfTasksOfTheUser(int id)
+        public async Task<IActionResult> GetNumberOfTasksOfTheUser(int id)
         {
-            var result = _LINQService.GetNumberOfTasksOfTheUserInTheProject(id);
+            var result = await _LINQService.GetNumberOfTasksOfTheUserInTheProjectAsync(id);
             if(result == null)
             {
                 return NotFound(result);
@@ -25,9 +26,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet("GetNumberOfTaskOfTheUserWhereNameLessThen45Letters/{id}")]
-        public IActionResult GetNumberOfTaskOfTheUserWhereNameLessThen45Letters(int id)
+        public async Task<IActionResult> GetNumberOfTaskOfTheUserWhereNameLessThen45Letters(int id)
         {
-            var result = _LINQService.GetNumberOfTaskOfTheUserWhereNameLessThen45Letters(id);
+            var result = await  _LINQService.GetNumberOfTaskOfTheUserWhereNameLessThen45LettersAsync(id);
             if(result == null)
             {
                 return NotFound(result);
@@ -36,9 +37,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet("GetTasksFinished2020ForSpecificUser/{id}")]
-        public IActionResult GetTasksFinished2020ForSpecificUser(int id)
+        public async Task<IActionResult> GetTasksFinished2020ForSpecificUser(int id)
         {
-            var result = _LINQService.GetTasksFinished2020ForSpecificUser(id);
+            var result = await _LINQService.GetTasksFinished2020ForSpecificUserAsync(id);
             if(result == null)
             {
                 return NotFound(result);
@@ -47,9 +48,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet("GetTeamsWhereAgeIsAtLeast10")]
-        public IActionResult GetTeamsWhereAgeIsAtLeast10()
+        public async Task<IActionResult> GetTeamsWhereAgeIsAtLeast10()
         {
-            var result = _LINQService.GetTeamsWhereAgeIsAtLeast10();
+            var result = await _LINQService.GetTeamsWhereAgeIsAtLeast10Async();
             if (result == null)
             {
                 return NotFound(result);
@@ -58,9 +59,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet("GetUsersByFirstNameWithTasksSortedByNameLength")]
-        public IActionResult GetUsersByFirstNameWithTasksSortedByNameLength()
+        public async Task<IActionResult> GetUsersByFirstNameWithTasksSortedByNameLength()
         {
-            var result = _LINQService.GetUsersByFirstNameWithTasksSortedByNameLength();
+            var result = await _LINQService.GetUsersByFirstNameWithTasksSortedByNameLengthAsync();
             if (result == null)
             {
                 return NotFound(result);
@@ -69,9 +70,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet("GetUserInfo/{id}")]
-        public IActionResult GetUserInfo(int id)
+        public async Task<IActionResult> GetUserInfo(int id)
         {
-            var result = _LINQService.GetUserInfo(id);
+            var result = await _LINQService.GetUserInfoAsync(id);
             if (result == null)
             {
                 return NotFound(result);
@@ -80,9 +81,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet("GetProjectsInfo")]    
-        public IActionResult GetProjectsInfo()
+        public async Task<IActionResult> GetProjectsInfo()
         {
-            var result = _LINQService.GetProjectsInfo();
+            var result = await _LINQService.GetProjectsInfoAsync();
             if (result == null)
             {
                 return NotFound(result);

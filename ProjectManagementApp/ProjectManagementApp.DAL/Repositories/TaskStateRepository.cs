@@ -2,9 +2,8 @@
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.ProjectManagementApp.Repositories
 {
@@ -16,14 +15,14 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             _context = context;
         }
 
-        public void Create(TaskState item)
+        public async System.Threading.Tasks.Task CreateAsync(TaskState item)
         {
-            _context.TaskStates.Add(item);
+            await _context.TaskStates.AddAsync(item);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = _context.TaskStates.FirstOrDefault(a => a.Id == id);
+            var item = await _context.TaskStates.FirstOrDefaultAsync(a => a.Id == id);
             if(item == null)
             {
                 return false;
@@ -32,19 +31,19 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             return true;
         }
 
-        public TaskState Get(int id)
+        public async Task<TaskState> GetAsync(int id)
         {
-            return _context.TaskStates.FirstOrDefault(a => a.Id == id);
+            return await _context.TaskStates.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public IEnumerable<TaskState> GetAll()
+        public async Task<IEnumerable<TaskState>> GetAllAsync()
         {
-            return _context.TaskStates;
+            return await _context.TaskStates.ToListAsync();
         }
 
-        public bool Update(TaskState item)
+        public async Task<bool> UpdateAsync(TaskState item)
         {
-            var exists = _context.TaskStates.Contains(item);
+            var exists = await _context.TaskStates.ContainsAsync(item);
             if(!exists)
             {
                 return false;

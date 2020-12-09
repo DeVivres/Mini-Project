@@ -3,6 +3,7 @@ using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.BLL.Services
 {
@@ -17,31 +18,37 @@ namespace ProjectManagementApp.BLL.Services
             _mapper = mapper;
         }
 
-        public void Create(TaskStateDTO item)
+        public async Task<bool> CreateAsync(TaskStateDTO item)
         {
-            _unitOfWork.TaskStates.Create(_mapper.Map<TaskState>(item));
+            await _unitOfWork.TaskStates.CreateAsync(_mapper.Map<TaskState>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return _unitOfWork.TaskStates.Delete(id);
+            var result = await _unitOfWork.TaskStates.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
+            return result;
         }
 
-        public TaskStateDTO Get(int id)
+        public async Task<TaskStateDTO> GetAsync(int id)
         {
-            var taskstate = _unitOfWork.TaskStates.Get(id);
+            var taskstate = await _unitOfWork.TaskStates.GetAsync(id);
             return _mapper.Map<TaskStateDTO>(taskstate);
         }
 
-        public IEnumerable<TaskStateDTO> GetAll()
+        public async Task<IEnumerable<TaskStateDTO>> GetAllAsync()
         {
-            var taskstates = _unitOfWork.TaskStates.GetAll();
+            var taskstates = await _unitOfWork.TaskStates.GetAllAsync();
             return _mapper.Map<IEnumerable<TaskStateDTO>>(taskstates);
         }
 
-        public bool Update(TaskStateDTO item)
+        public async Task<bool> UpdateAsync(TaskStateDTO item)
         {
-            return _unitOfWork.TaskStates.Update(_mapper.Map<TaskState>(item));
+            await _unitOfWork.TaskStates.UpdateAsync(_mapper.Map<TaskState>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }

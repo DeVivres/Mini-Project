@@ -1,29 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using ProjectManagementApp.ProjectManagementApp.Context;
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.ProjectManagementApp.Repositories
 {
     public class ProjectRepository : IRepository<Project>
     {
         private readonly DatabaseContext _context;
+        public ProjectRepository() { }
         public ProjectRepository(DatabaseContext context)
         {
             _context = context;
         }
             
-        public void Create(Project item)
+        public async System.Threading.Tasks.Task CreateAsync(Project item)
         {
-            _context.Projects.Add(item);
+            await _context.Projects.AddAsync(item);
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var item = _context.Projects.FirstOrDefault(a => a.Id == id);
+            var item = await _context.Projects.FirstOrDefaultAsync(a => a.Id == id);
             if(item == null)
             {
                 return false;
@@ -32,19 +32,19 @@ namespace ProjectManagementApp.ProjectManagementApp.Repositories
             return true;
         }
 
-        public Project Get(int id)
+        public async Task<Project> GetAsync(int id)
         {
-            return _context.Projects.FirstOrDefault(a => a.Id == id);
+            return await _context.Projects.FirstOrDefaultAsync(a => a.Id == id);
         }
 
-        public IEnumerable<Project> GetAll()
+        public async Task<IEnumerable<Project>> GetAllAsync()
         {
-            return _context.Projects;
+            return await _context.Projects.ToListAsync();
         }
 
-        public bool Update(Project item)
+        public async Task<bool> UpdateAsync(Project item)
         {
-            var exists = _context.Projects.Contains(item);
+            var exists = await _context.Projects.ContainsAsync(item);
             if (!exists)
             {
                 return false;

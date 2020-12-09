@@ -3,6 +3,7 @@ using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.BLL.Services
 {
@@ -17,35 +18,36 @@ namespace ProjectManagementApp.BLL.Services
             _mapper = mapper;
         }
 
-        public void Create(ProjectDTO item)
+        public async Task<bool> CreateAsync(ProjectDTO item)
         {
-            _unitOfWork.Projects.Create(_mapper.Map<Project>(item));
-            _unitOfWork.SaveChanges();
-        }
-
-        public bool Delete(int id)
-        {
-            _unitOfWork.Projects.Delete(id);
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.Projects.CreateAsync(_mapper.Map<Project>(item));
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
 
-        public ProjectDTO Get(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            var project = _unitOfWork.Projects.Get(id);
+            var result = await _unitOfWork.Projects.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
+            return result;
+        }
+
+        public async Task<ProjectDTO> GetAsync(int id)
+        {
+            var project = await _unitOfWork.Projects.GetAsync(id);
             return _mapper.Map<ProjectDTO>(project);
         }
 
-        public IEnumerable<ProjectDTO> GetAll()
+        public async Task<IEnumerable<ProjectDTO>> GetAllAsync()
         {
-            var projects = _unitOfWork.Projects.GetAll();
+            var projects = await _unitOfWork.Projects.GetAllAsync();
             return _mapper.Map<IEnumerable<ProjectDTO>>(projects);
         }
 
-        public bool Update(ProjectDTO item)
+        public async Task<bool> UpdateAsync(ProjectDTO item)
         {
-            _unitOfWork.Projects.Update(_mapper.Map<Project>(item));
-            _unitOfWork.SaveChanges();
+            await _unitOfWork.Projects.UpdateAsync(_mapper.Map<Project>(item));
+            await _unitOfWork.SaveChangesAsync();
             return true;
         }
     }

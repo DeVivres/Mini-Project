@@ -42,10 +42,10 @@ namespace ProjectManagementApp.BLL.Tests
             };
 
             // Act
-            _userService.Create(user);
+            _userService.CreateAsync(user);
 
             // Assert
-            A.CallTo(() => _unitOfWork.Users.Create(A<User>.That.Matches(a => a.Id == user.Id))).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Users.CreateAsync(A<User>.That.Matches(a => a.Id == user.Id))).MustHaveHappened();
         }
 
         [Fact]
@@ -64,11 +64,11 @@ namespace ProjectManagementApp.BLL.Tests
             };
 
             // Act
-            _userService.Create(user);
-            _userService.Delete(user.Id);
+            _userService.CreateAsync(user);
+            _userService.DeleteAsync(user.Id);
 
             // Assert
-            A.CallTo(() => _unitOfWork.Users.Delete(1)).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Users.DeleteAsync(1)).MustHaveHappened();
         }       
     }
 }

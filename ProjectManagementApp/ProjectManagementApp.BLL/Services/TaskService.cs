@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ProjectManagementApp.Common.DTO;
-using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.BLL.Services
 {
@@ -17,31 +17,37 @@ namespace ProjectManagementApp.BLL.Services
             _mapper = mapper;
         }
 
-        public void Create(TaskDTO item)
+        public async Task<bool> CreateAsync(TaskDTO item)
         {
-            _unitOfWork.Tasks.Create(_mapper.Map<Task>(item));
+            await _unitOfWork.Tasks.CreateAsync(_mapper.Map<ProjectManagementApp.Entities.Task>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return _unitOfWork.Tasks.Delete(id);
+            var result = await _unitOfWork.Tasks.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
+            return result;
         }
 
-        public TaskDTO Get(int id)
+        public async Task<TaskDTO> GetAsync(int id)
         {
-            var task = _unitOfWork.Tasks.Get(id);
+            var task = await _unitOfWork.Tasks.GetAsync(id);
             return _mapper.Map<TaskDTO>(task);
         }
 
-        public IEnumerable<TaskDTO> GetAll()
+        public async Task<IEnumerable<TaskDTO>> GetAllAsync()
         {
-            var tasks = _unitOfWork.Tasks.GetAll();
+            var tasks = await _unitOfWork.Tasks.GetAllAsync();
             return _mapper.Map<IEnumerable<TaskDTO>>(tasks);
         }
 
-        public bool Update(TaskDTO item)
+        public async Task<bool> UpdateAsync(TaskDTO item)
         {
-            return _unitOfWork.Tasks.Update(_mapper.Map<Task>(item));
+            await _unitOfWork.Tasks.UpdateAsync(_mapper.Map<ProjectManagementApp.Entities.Task>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }

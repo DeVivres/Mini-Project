@@ -37,7 +37,7 @@ namespace ProjectManagementApp.BLL.Tests
 
         public void ReceiveData()
         {
-            A.CallTo(() => _unitOfWork.Projects.GetAll()).Returns(new List<Project>()
+            A.CallTo(() => _unitOfWork.Projects.GetAllAsync()).Returns(new List<Project>()
             {
                 new Project() { Id = 1, Name = "Project1", AuthorId = 1, Description = "We need to do this project asap", CreatedAt = new System.DateTime(2010, 4, 10),
                     Tasks = new List<Task>()
@@ -61,7 +61,7 @@ namespace ProjectManagementApp.BLL.Tests
                     new Task () { Id = 3, Name = "Task Taskerutonos", ProjectId = 3, PerformerId = 3, Description = "Later to do" }
                 }},
             });
-            A.CallTo(() => _unitOfWork.Tasks.GetAll()).Returns(new List<Task>()
+            A.CallTo(() => _unitOfWork.Tasks.GetAllAsync()).Returns(new List<Task>()
             {
                 new Task() { Id = 1, Name = "Important Task", FinishedAt = new System.DateTime(2020, 5, 30), PerformerId = 2 },
                 new Task() { Id = 2, Name = "Urgent", FinishedAt = new System.DateTime(2015, 2, 25), PerformerId = 3 },
@@ -69,7 +69,7 @@ namespace ProjectManagementApp.BLL.Tests
                 new Task() { Id = 4, Name = "Later Task", FinishedAt = new System.DateTime(2020, 6, 1), PerformerId = 1 },
                 new Task() { Id = 5, Name = "Soon", FinishedAt = new System.DateTime(2020, 7, 20), PerformerId = 4 }
             });
-            A.CallTo(() => _unitOfWork.Users.GetAll()).Returns(new List<User>()
+            A.CallTo(() => _unitOfWork.Users.GetAllAsync()).Returns(new List<User>()
             {
                 new User() { Id = 1, FirstName = "Tom", TeamId = 1, Birthday = new System.DateTime(1997, 4, 23)},
                 new User() { Id = 2, FirstName = "Max", TeamId = 1, Birthday = new System.DateTime(2004, 5, 14)},
@@ -77,7 +77,7 @@ namespace ProjectManagementApp.BLL.Tests
                 new User() { Id = 4, FirstName = "Ann", TeamId = 5, Birthday = new System.DateTime(2000, 9, 29)},
                 new User() { Id = 5, FirstName = "Mark", TeamId = 3, Birthday = new System.DateTime(2015, 7, 11)},
             });
-            A.CallTo(() => _unitOfWork.Teams.GetAll()).Returns(new List<Team>()
+            A.CallTo(() => _unitOfWork.Teams.GetAllAsync()).Returns(new List<Team>()
             {
                 new Team() { Id = 1, Name = "Team1" },
                 new Team() { Id = 2, Name = "Team2" },
@@ -92,7 +92,7 @@ namespace ProjectManagementApp.BLL.Tests
         {
             ReceiveData();
             
-            var result = _LINQService.GetNumberOfTasksOfTheUserInTheProject(3);
+            var result = _LINQService.GetNumberOfTasksOfTheUserInTheProjectAsync(3).Result;
 
             Assert.Equal(2, result.Count());
 
@@ -103,7 +103,7 @@ namespace ProjectManagementApp.BLL.Tests
         {
             ReceiveData();
 
-            var result = _LINQService.GetNumberOfTaskOfTheUserWhereNameLessThen45Letters(1);
+            var result = _LINQService.GetNumberOfTaskOfTheUserWhereNameLessThen45LettersAsync(1).Result;
 
             Assert.Equal(1, result.ElementAt(0).PerformerId);
         }
@@ -113,7 +113,7 @@ namespace ProjectManagementApp.BLL.Tests
         {
             ReceiveData();
 
-            var result = _LINQService.GetTasksFinished2020ForSpecificUser(4);
+            var result = _LINQService.GetTasksFinished2020ForSpecificUserAsync(4).Result;
 
             Assert.True(result.Count() == 1);
         }
@@ -123,7 +123,7 @@ namespace ProjectManagementApp.BLL.Tests
         {
             ReceiveData();
 
-            var result = _LINQService.GetTeamsWhereAgeIsAtLeast10();
+            var result = _LINQService.GetTeamsWhereAgeIsAtLeast10Async().Result;
 
             Assert.Equal(3, result.Count());
         }
@@ -133,7 +133,7 @@ namespace ProjectManagementApp.BLL.Tests
         {
             ReceiveData();
 
-            var result = _LINQService.GetUsersByFirstNameWithTasksSortedByNameLength();
+            var result = _LINQService.GetUsersByFirstNameWithTasksSortedByNameLengthAsync().Result;
             
             Assert.Equal(5, result.Count());
             Assert.True(result.ElementAt(0).Item1.Id == 4);
@@ -147,7 +147,7 @@ namespace ProjectManagementApp.BLL.Tests
         {
             ReceiveData();
 
-            var result = _LINQService.GetUserInfo(1);
+            var result = _LINQService.GetUserInfoAsync(1).Result;
 
             Assert.Equal(0, result.notFinishedTasks);
             Assert.Equal(3, result.tasksAmount);
@@ -159,7 +159,7 @@ namespace ProjectManagementApp.BLL.Tests
         {
             ReceiveData();
 
-            var result = _LINQService.GetProjectsInfo();
+            var result = _LINQService.GetProjectsInfoAsync().Result;
 
             Assert.Equal(3, result.ToList().Count);
             Assert.True(result.ElementAt(0).Project.Name == "Project1");

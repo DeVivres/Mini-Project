@@ -4,6 +4,7 @@ using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using ProjectManagementApp.ProjectManagementApp.Repositories;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.ProjectManagementApp.UnitOfWork
 {
@@ -23,20 +24,24 @@ namespace ProjectManagementApp.ProjectManagementApp.UnitOfWork
             disposed = false;
         }
 
-        public void Initialize()
+        public async System.Threading.Tasks.Task InitializeAsync()
         {
-            Projects.GetAll()
-            .Join(Teams.GetAll(), a => a.TeamId, b => b.Id, (a, b) =>
+            var projects = await Projects.GetAllAsync();
+            var teams = await Teams.GetAllAsync();
+            var users = await Users.GetAllAsync();
+            var tasks = await Tasks.GetAllAsync();
+            projects
+            .Join(teams, a => a.TeamId, b => b.Id, (a, b) =>
             {
                 a.Team = b; return a;
             })
-            .Join(Users.GetAll(), a => a.AuthorId, b => b.Id, (a, b) =>
+            .Join(users, a => a.AuthorId, b => b.Id, (a, b) =>
             {
                 a.Author = b; return a;
             })
-            .GroupJoin(Tasks.GetAll(), a => a.Id, b => b.ProjectId, (project, taskList) =>
+            .GroupJoin(tasks, a => a.Id, b => b.ProjectId, (project, taskList) =>
             {
-                project.Tasks = taskList.Join(Users.GetAll(), a => a.PerformerId, b => b.Id, (a, b) =>
+                project.Tasks = taskList.Join(users, a => a.PerformerId, b => b.Id, (a, b) =>
                 {
                     a.Performer = b;
                     return a;
@@ -57,7 +62,7 @@ namespace ProjectManagementApp.ProjectManagementApp.UnitOfWork
             }
         }
 
-        public IRepository<Task> Tasks
+        public IRepository<Entities.Task> Tasks
         {
             get
             {
@@ -105,9 +110,9 @@ namespace ProjectManagementApp.ProjectManagementApp.UnitOfWork
             }
         }
 
-        public int SaveChanges()
+        public async Task<int> SaveChangesAsync()
         {
-            return _context.SaveChanges();
+            return await _context.SaveChangesAsync();
         }
 
         public virtual void Dispose(bool disposing)

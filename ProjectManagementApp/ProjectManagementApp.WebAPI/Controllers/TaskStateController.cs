@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.WebAPI.Controllers
 {
@@ -15,16 +16,16 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var taskStates = _taskStateService.GetAll();
+            var taskStates = await _taskStateService.GetAllAsync();
             return Ok(taskStates);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var taskState = _taskStateService.Get(id);
+            var taskState = await _taskStateService.GetAsync(id);
             if (taskState == null)
             {
                 return NotFound(taskState);
@@ -33,16 +34,20 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] TaskStateDTO taskState)
+        public async Task<IActionResult> CreateAsync([FromBody] TaskStateDTO taskState)
         {
-            _taskStateService.Create(taskState);
+            var created = await _taskStateService.CreateAsync(taskState);
+            if (!created)
+            {
+                return BadRequest(taskState);
+            }
             return Created($"The TaskState was created", taskState);
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] TaskStateDTO taskState)
+        public async Task<IActionResult> UpdateAsync([FromBody] TaskStateDTO taskState)
         {
-            var updated = _taskStateService.Update(taskState);
+            var updated = await _taskStateService.UpdateAsync(taskState);
             if (!updated)
             {
                 return NotFound(taskState);
@@ -51,9 +56,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsync(int id)
         {
-            var deleted = _taskStateService.Delete(id);
+            var deleted = await _taskStateService.DeleteAsync(id);
             if (!deleted)
             {
                 return NotFound();

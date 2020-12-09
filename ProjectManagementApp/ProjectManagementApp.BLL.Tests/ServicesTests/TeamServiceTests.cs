@@ -40,25 +40,25 @@ namespace ProjectManagementApp.BLL.Tests
             };
 
             // Act
-            _teamService.Create(team);
-            _teamService.Delete(team.Id);
+            _teamService.CreateAsync(team);
+            _teamService.DeleteAsync(team.Id);
 
             // Assert
-            A.CallTo(() => _unitOfWork.Teams.Delete(1)).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Teams.DeleteAsync(1)).MustHaveHappened();
         }
 
         [Fact]
         public void GetAllTeams_Return2InsteadOf5()
         {
             // Arrange
-            A.CallTo(() => _unitOfWork.Teams.GetAll()).Returns(new List<Team>()
+            A.CallTo(() => _unitOfWork.Teams.GetAllAsync()).Returns(new List<Team>()
             {
                 new Team() { Id = 1, Name = "Team1", CreatedAt = DateTime.Today },
                 new Team() { Id = 2, Name = "Team2", CreatedAt = DateTime.Today },
             });
 
             // Act
-            var result = _teamService.GetAll();
+            var result = _teamService.GetAllAsync().Result;
 
             // Assert
             Assert.NotEqual(5, result.Count());
@@ -83,12 +83,12 @@ namespace ProjectManagementApp.BLL.Tests
             };
 
             // Act
-            _teamService.Create(initialTeam);
-            _teamService.Update(updatedTeam);
+            _teamService.CreateAsync(initialTeam);
+            _teamService.UpdateAsync(updatedTeam);
 
             // Assert
-            A.CallTo(() => _unitOfWork.Teams.Create(A<Team>.That.Matches(a => a.Id == initialTeam.Id))).MustHaveHappened();
-            A.CallTo(() => _unitOfWork.Teams.Update(A<Team>.That.Matches(a => a.Id == updatedTeam.Id))).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Teams.CreateAsync(A<Team>.That.Matches(a => a.Id == initialTeam.Id))).MustHaveHappened();
+            A.CallTo(() => _unitOfWork.Teams.UpdateAsync(A<Team>.That.Matches(a => a.Id == updatedTeam.Id))).MustHaveHappened();
 
         }
     }

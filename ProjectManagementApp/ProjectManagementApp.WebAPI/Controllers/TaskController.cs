@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.WebAPI.Controllers
 {
@@ -15,16 +16,16 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAllAsync()
         {
-            var tasks = _taskService.GetAll();
+            var tasks = await _taskService.GetAllAsync();
             return Ok(tasks);
         }
 
         [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> GetAsync(int id)
         {
-            var task = _taskService.Get(id);
+            var task = await _taskService.GetAsync(id);
             if (task == null)
             {
                 return NotFound(task);
@@ -33,16 +34,20 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] TaskDTO task)
+        public async Task<IActionResult> CreateAsync([FromBody] TaskDTO task)
         {
-            _taskService.Create(task);
+            var created = await _taskService.CreateAsync(task);
+            if (!created)
+            {
+                return BadRequest(task);
+            }
             return Created($"The Task was created", task);
         }
 
         [HttpPut]
-        public IActionResult Update([FromBody] TaskDTO task)
+        public async Task <IActionResult> UpdateAsync([FromBody] TaskDTO task)
         {
-            var updated = _taskService.Update(task);
+            var updated = await _taskService.UpdateAsync(task);
             if (!updated)
             {
                 return NotFound(task);
@@ -51,9 +56,9 @@ namespace ProjectManagementApp.WebAPI.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> DeleteAsyncAsync(int id)
         {
-            var deleted = _taskService.Delete(id);
+            var deleted = await _taskService.DeleteAsync(id);
             if (!deleted)
             {
                 return NotFound();

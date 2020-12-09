@@ -3,6 +3,7 @@ using ProjectManagementApp.Common.DTO;
 using ProjectManagementApp.ProjectManagementApp.Entities;
 using ProjectManagementApp.ProjectManagementApp.Interfaces;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ProjectManagementApp.BLL.Services
 {
@@ -17,31 +18,37 @@ namespace ProjectManagementApp.BLL.Services
             _mapper = mapper;
         }
 
-        public void Create(UserDTO item)
+        public async Task<bool> CreateAsync(UserDTO item)
         {
-            _unitOfWork.Users.Create(_mapper.Map<User>(item));
+            await _unitOfWork.Users.CreateAsync(_mapper.Map<User>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
 
-        public bool Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
-            return _unitOfWork.Users.Delete(id);
+            var result = await _unitOfWork.Users.DeleteAsync(id);
+            await _unitOfWork.SaveChangesAsync();
+            return result;
         }
 
-        public UserDTO Get(int id)
+        public async Task<UserDTO> GetAsync(int id)
         {
-            var user = _unitOfWork.Users.Get(id);
+            var user = await _unitOfWork.Users.GetAsync(id);
             return _mapper.Map<UserDTO>(user);
         }
 
-        public IEnumerable<UserDTO> GetAll()
+        public async Task<IEnumerable<UserDTO>> GetAllAsync()
         {
-            var users = _unitOfWork.Users.GetAll();
+            var users = await _unitOfWork.Users.GetAllAsync();
             return _mapper.Map<IEnumerable<UserDTO>>(users);
         }
 
-        public bool Update(UserDTO item)
+        public async Task<bool> UpdateAsync(UserDTO item)
         {
-            return _unitOfWork.Users.Update(_mapper.Map<User>(item));
+            await _unitOfWork.Users.UpdateAsync(_mapper.Map<User>(item));
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }
